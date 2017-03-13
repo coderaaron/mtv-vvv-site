@@ -2,9 +2,9 @@
 # Provision WordPress Stable
 
 # Make a database, if we don't already have one
-echo -e "\nCreating database '${VVV_SITE_NAME}' (if it's not already there)"
-mysql -u root --password=root -e "CREATE DATABASE IF NOT EXISTS ${VVV_SITE_NAME}"
-mysql -u root --password=root -e "GRANT ALL PRIVILEGES ON ${VVV_SITE_NAME}.* TO wp@localhost IDENTIFIED BY 'wp';"
+echo -e "\nCreating database '${SITE_ESCAPED}' (if it's not already there)"
+mysql -u root --password=root -e "CREATE DATABASE IF NOT EXISTS ${SITE_ESCAPED}"
+mysql -u root --password=root -e "GRANT ALL PRIVILEGES ON ${SITE_ESCAPED}.* TO wp@localhost IDENTIFIED BY 'wp';"
 echo -e "\n DB operations done.\n\n"
 
 # Nginx Logs
@@ -48,7 +48,7 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
   cd ${VVV_PATH_TO_SITE}/public_html
 
   echo "Configuring WordPress Stable..."
-  noroot wp core config --dbname=${VVV_SITE_NAME} --dbuser=wp --dbpass=wp --quiet --path=wp/ --force --extra-php <<PHP
+  noroot wp core config --dbname=${SITE_ESCAPED} --dbuser=wp --dbpass=wp --quiet --path=wp/ --force --extra-php <<PHP
 define( 'WP_HOME', 'http://' . basename( realpath( __DIR__ . '/..' ) ) . '.dev' );
 define( 'WP_SITEURL', 'http://' . basename( realpath( __DIR__ . '/..' ) ) . '.dev/wp' );
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
