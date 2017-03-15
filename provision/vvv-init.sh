@@ -54,7 +54,7 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
 define( 'WP_HOME', 'http://' . basename( realpath( __DIR__ . '/..' ) ) );
 define( 'WP_SITEURL', 'http://' . basename( realpath( __DIR__ . '/..' ) ) . '/wp' );
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
-define( 'WP_CONTENT_URL', 'https://' . \$_SERVER['HTTP_HOST'] . '/wp/wp-content' );
+define( 'WP_CONTENT_URL', 'https://' . \$_SERVER['HTTP_HOST'] . '/wp-content' );
 
 define( 'WP_DEBUG', true );
 PHP
