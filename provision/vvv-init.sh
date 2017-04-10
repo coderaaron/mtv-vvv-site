@@ -70,3 +70,22 @@ PHP
   mv wp-config.php.orig wp-config.php
 
 fi
+
+# SSL stuff, still in beta
+cd ~
+if [[ ! -e "ca.crt" ]]; then
+  openssl genrsa -aes256 -out ca.key 2048
+  openssl req -new -x509 -days 7300 -key ca.key -sha256 -extensions v3_ca -out ca.crt -subj '/C=US/ST=Missouri/L=Saint Louis/CN=vvv.dev'
+  sudo cp ca.crt /usr/local/share/ca-certificates/
+fi
+if [[ ! -e "/usr/local/share/ca-certificates/${SITE}.crt" ]]; then
+  cd ${VVV_PATH_TO_SITE}
+  mkdir -p ssl
+  cd ssl
+  openssl genrsa -out ${SITE}.key 2048
+  openssl req -sha256 -new -key ${SITE}.key -out ${SITE}.csr -subj '/C=US/ST=Missouri/L=Saint Louis/CN=${SITE}'
+  openssl x509 -sha256 -req -in ${SITE}.csr -CA ~/ca.crt -CAkey ~/ca.key -CAcreateserial -out ${SITE}.crt -days 7300
+  openssl verify -CAfile ~/ca.crt ${SITE}.crt
+  sudo cp ${SITE}.crt /usr/local/share/ca-certificates/
+  sudo update-ca-certificates
+fi
