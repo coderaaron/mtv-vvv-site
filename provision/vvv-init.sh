@@ -74,7 +74,7 @@ fi
 # SSL stuff, still in beta
 cd ~
 if [[ ! -e "ca.crt" ]]; then
-  openssl genrsa -aes256 -out ca.key 2048
+  openssl genrsa -out ca.key 2048
   openssl req -new -x509 -days 7300 -key ca.key -sha256 -extensions v3_ca -out ca.crt -subj '/C=US/ST=Missouri/L=Saint Louis/CN=vvv.dev'
   sudo cp ca.crt /usr/local/share/ca-certificates/
 fi
