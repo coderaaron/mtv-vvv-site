@@ -77,7 +77,8 @@ echo -e "\n Starting SSL operations.\n\n"
 # This creates a Root certificate for the "server" to sign all of the site certificates. This only needs to be done once, so we check
 # the directory where openssl expects certificates to be located. (/usr/local/share/ca-certificates/)
 cd ~
-if [[ ! -e "/usr/local/share/ca-certificates/ca.crt" ]]; then
+if [[ ! -e "/usr/local/share/ca-certificates/rootCA.pem" ]]; then
+  echo -e "\n Creating Root certificate.\n\n"
   cd /vagrant/
   openssl genrsa -out rootCA.key 2048
   openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.pem -subj '/C=US/ST=Missouri/L=Saint Louis/O=WUSM/OU=MPA/emailAddress=vagrant@localhost/CN=vvv.dev'
@@ -99,7 +100,7 @@ if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${SITE}.crt" ]]; then
   echo "DNS.1 = ${SITE}" >> v3.ext
   
   openssl req -new -sha256 -nodes -out ${SITE}.csr -newkey rsa:2048 -keyout ${SITE}.key -config <( cat ${SITE}.csr.cnf )
-  openssl x509 -req -in ${SITE}.csr -CA /vagrant/rootCA.pem -CAkey /vagrant/rootCA.key -CAcreateserial -out ${SITE}.crt -days 500 -sha256 -extfile v3.ext
+  openssl x509 -req -in ${SITE}.csr -CA /usr/local/share/ca-certificates/rootCA.pem -CAkey /usr/local/share/ca-certificates/rootCA.key -CAcreateserial -out ${SITE}.crt -days 500 -sha256 -extfile v3.ext
 
   sudo update-ca-certificates
 fi
