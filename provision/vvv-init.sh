@@ -80,6 +80,7 @@ if [[ ! -e "/usr/local/share/ca-certificates/ca.crt" ]]; then
   openssl genrsa -out rootCA.key 2048
   openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.pem -subj '/C=US/ST=Missouri/L=Saint Louis/O=WUSM/OU=MPA/emailAddress=vagrant@localhost/CN=vvv.dev'
   sudo cp rootCA.pem /usr/local/share/ca-certificates/
+  sudo cp rootCA.key /usr/local/share/ca-certificates/
   sudo update-ca-certificates
 fi
 # Now create a certificate for this site and sign it with the server's Root certificate created above (or by the first site spun up on this Vagrant)
