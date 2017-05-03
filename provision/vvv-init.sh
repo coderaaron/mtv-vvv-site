@@ -87,6 +87,7 @@ if [[ ! -e "/usr/local/share/ca-certificates/ca.crt" ]]; then
 fi
 # Now create a certificate for this site and sign it with the server's Root certificate created above (or by the first site spun up on this Vagrant)
 if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${SITE}.crt" ]]; then
+  echo -e "\n Creating site SSL certificate.\n\n"
   mkdir -p ${VVV_PATH_TO_SITE}/ssl
   cp ${VVV_PATH_TO_SITE}/provision/server-template.csr.cnf ${VVV_PATH_TO_SITE}/ssl/${SITE}.csr.cnf
   cd ${VVV_PATH_TO_SITE}/ssl
