@@ -71,6 +71,8 @@ PHP
 
 fi
 
+echo -e "\n Starting SSL operations.\n\n"
+
 # SSL stuff, still in beta
 # This creates a Root certificate for the "server" to sign all of the site certificates. This only needs to be done once, so we check
 # the directory where openssl expects certificates to be located. (/usr/local/share/ca-certificates/)
@@ -101,3 +103,5 @@ if [[ ! -e "/usr/local/share/ca-certificates/${SITE}.crt" ]]; then
   sudo cp ${SITE}.crt /usr/local/share/ca-certificates/
   sudo update-ca-certificates
 fi
+
+echo -e "\n SSL operations done.\n\n"
