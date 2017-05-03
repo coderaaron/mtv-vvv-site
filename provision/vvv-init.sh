@@ -86,7 +86,7 @@ if [[ ! -e "/usr/local/share/ca-certificates/ca.crt" ]]; then
   sudo update-ca-certificates
 fi
 # Now create a certificate for this site and sign it with the server's Root certificate created above (or by the first site spun up on this Vagrant)
-if [[ ! -e "/usr/local/share/ca-certificates/${SITE}.crt" ]]; then
+if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${SITE}.crt" ]]; then
   mkdir -p ${VVV_PATH_TO_SITE}/ssl
   cp ${VVV_PATH_TO_SITE}/provision/server-template.csr.cnf ${VVV_PATH_TO_SITE}/ssl/${SITE}.csr.cnf
   cd ${VVV_PATH_TO_SITE}/ssl
@@ -100,7 +100,6 @@ if [[ ! -e "/usr/local/share/ca-certificates/${SITE}.crt" ]]; then
   openssl req -new -sha256 -nodes -out ${SITE}.csr -newkey rsa:2048 -keyout ${SITE}.key -config <( cat ${SITE}.csr.cnf )
   openssl x509 -req -in ${SITE}.csr -CA /vagrant/rootCA.pem -CAkey /vagrant/rootCA.key -CAcreateserial -out ${SITE}.crt -days 500 -sha256 -extfile v3.ext
 
-  sudo cp ${SITE}.crt /usr/local/share/ca-certificates/
   sudo update-ca-certificates
 fi
 
