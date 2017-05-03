@@ -72,20 +72,31 @@ PHP
 fi
 
 # SSL stuff, still in beta
+# This creates a Root certificate for the "server" to sign all of the site certificates. This only needs to be done once, so we check
+# the directory where openssl expects certificates to be located. (/usr/local/share/ca-certificates/)
 cd ~
-if [[ ! -e "ca.crt" ]]; then
-  openssl genrsa -out ca.key 2048
-  openssl req -new -x509 -days 7300 -key ca.key -sha256 -extensions v3_ca -out ca.crt -subj '/C=US/ST=Missouri/L=Saint Louis/CN=vvv.dev'
-  sudo cp ca.crt /usr/local/share/ca-certificates/
+if [[ ! -e "/usr/local/share/ca-certificates/ca.crt" ]]; then
+  cd /vagrant/
+  openssl genrsa -out rootCA.key 2048
+  openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.pem -subj '/C=US/ST=Missouri/L=Saint Louis/O=WUSM/OU=MPA/emailAddress=vagrant@localhost/CN=vvv.dev'
+  sudo cp rootCA.pem /usr/local/share/ca-certificates/
+  sudo update-ca-certificates
 fi
+# Now create a certificate for this site and sign it with the server's Root certificate created above (or by the first site spun up on this Vagrant)
 if [[ ! -e "/usr/local/share/ca-certificates/${SITE}.crt" ]]; then
-  cd ${VVV_PATH_TO_SITE}
-  mkdir -p ssl
-  cd ssl
-  openssl genrsa -out ${SITE}.key 2048
-  openssl req -sha256 -new -key ${SITE}.key -out ${SITE}.csr -subj '/C=US/ST=Missouri/L=Saint Louis/CN=${SITE}'
-  openssl x509 -sha256 -req -in ${SITE}.csr -CA ~/ca.crt -CAkey ~/ca.key -CAcreateserial -out ${SITE}.crt -days 7300
-  openssl verify -CAfile ~/ca.crt ${SITE}.crt
+  mkdir -p ${VVV_PATH_TO_SITE}/ssl
+  cp ${VVV_PATH_TO_SITE}/provision/server-template.csr.cnf ${VVV_PATH_TO_SITE}/ssl/${SITE}.csr.cnf
+  cd ${VVV_PATH_TO_SITE}/ssl
+  echo "authorityKeyIdentifier=keyid,issuer" > v3.ext
+  echo "basicConstraints=CA:FALSE" >> v3.ext
+  echo "keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment" >> v3.ext
+  echo "subjectAltName = @alt_names" >> v3.ext
+  echo "[alt_names]" >> v3.ext
+  echo "DNS.1 = ${SITE}" >> v3.ext
+  
+  openssl req -new -sha256 -nodes -out ${SITE}.csr -newkey rsa:2048 -keyout ${SITE}.key -config <( cat ${SITE}.csr.cnf )
+  openssl x509 -req -in ${SITE}.csr -CA /vagrant/rootCA.pem -CAkey /vagrant/rootCA.key -CAcreateserial -out ${SITE}.crt -days 500 -sha256 -extfile v3.ext
+
   sudo cp ${SITE}.crt /usr/local/share/ca-certificates/
   sudo update-ca-certificates
 fi
