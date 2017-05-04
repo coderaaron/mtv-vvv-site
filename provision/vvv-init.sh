@@ -57,6 +57,7 @@ define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 define( 'WP_CONTENT_URL', 'https://' . \$_SERVER['HTTP_HOST'] . '/wp-content' );
 
 define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', true );
 PHP
   mv wp/wp-config.php wp-config.php
 
