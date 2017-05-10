@@ -75,6 +75,12 @@ fi
 echo -e "\n Starting SSL operations.\n\n"
 
 # SSL stuff, still in beta
+# 
+# 
+# NOTE: You need to add the line 'openssl.cafile=/usr/local/share/ca-certificates/rootCA.pem' to /etc/php/7.0/fpm/php.ini (in the Vagrant)
+# You also need to double-click on the ${SITE}.crt and add it to the keychain
+# 
+# 
 # This creates a Root certificate for the "server" to sign all of the site certificates. This only needs to be done once, so we check
 # the directory where openssl expects certificates to be located. (/usr/local/share/ca-certificates/)
 cd ~
