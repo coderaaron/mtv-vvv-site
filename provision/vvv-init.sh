@@ -97,7 +97,6 @@ fi
 if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${SITE}.crt" ]]; then
   echo -e "\n Creating site SSL certificate.\n\n"
   mkdir -p ${VVV_PATH_TO_SITE}/ssl
-  cp ${VVV_PATH_TO_SITE}/provision/server-template.csr.cnf ${VVV_PATH_TO_SITE}/ssl/${SITE}.csr.cnf
   cd ${VVV_PATH_TO_SITE}/ssl
   echo "authorityKeyIdentifier=keyid,issuer" > v3.ext
   echo "basicConstraints=CA:FALSE" >> v3.ext
@@ -105,6 +104,21 @@ if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${SITE}.crt" ]]; then
   echo "subjectAltName = @alt_names" >> v3.ext
   echo "[alt_names]" >> v3.ext
   echo "DNS.1 = ${SITE}" >> v3.ext
+  
+  echo "[req]" > ${SITE}.csr.cnf
+  echo "default_bits = 2048" >> ${SITE}.csr.cnf
+  echo "prompt = no" >> ${SITE}.csr.cnf
+  echo "default_md = sha256" >> ${SITE}.csr.cnf
+  echo "distinguished_name = dn" >> ${SITE}.csr.cnf
+  echo "[dn]" >> ${SITE}.csr.cnf
+  echo "C=US" >> ${SITE}.csr.cnf
+  echo "ST=Missouri" >> ${SITE}.csr.cnf
+  echo "L=Saint Louis" >> ${SITE}.csr.cnf
+  echo "O=WUSM" >> ${SITE}.csr.cnf
+  echo "OU=MPA" >> ${SITE}.csr.cnf
+  echo "emailAddress=vagrant@localhost" >> ${SITE}.csr.cnf
+  echo "CN = ${SITE}" >> ${SITE}.csr.cnf
+
   
   openssl req -new -sha256 -nodes -out ${SITE}.csr -newkey rsa:2048 -keyout ${SITE}.key -config <( cat ${SITE}.csr.cnf )
   openssl x509 -req -in ${SITE}.csr -CA /usr/local/share/ca-certificates/rootCA.pem -CAkey /usr/local/share/ca-certificates/rootCA.key -CAcreateserial -out ${SITE}.crt -days 500 -sha256 -extfile v3.ext
