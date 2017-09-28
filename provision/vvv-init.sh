@@ -94,7 +94,8 @@ if [[ ! -e "/usr/local/share/ca-certificates/rootCA.pem" ]]; then
   sudo update-ca-certificates
 fi
 # Now create a certificate for this site and sign it with the server's Root certificate created above (or by the first site spun up on this Vagrant)
-if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${SITE}.crt" ]]; then
+HOSTNAME=$(get_hosts)
+if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${HOSTNAME}.crt" ]]; then
   echo -e "\n Creating site SSL certificate.\n\n"
   mkdir -p ${VVV_PATH_TO_SITE}/ssl
   cd ${VVV_PATH_TO_SITE}/ssl
@@ -103,21 +104,21 @@ if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${SITE}.crt" ]]; then
   echo "keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment" >> v3.ext
   echo "subjectAltName = @alt_names" >> v3.ext
   echo "[alt_names]" >> v3.ext
-  echo "DNS.1 = ${SITE}" >> v3.ext
+  echo "DNS.1 = ${HOSTNAME}" >> v3.ext
   
-  echo "[req]" > ${SITE}.csr.cnf
-  echo "default_bits = 2048" >> ${SITE}.csr.cnf
-  echo "prompt = no" >> ${SITE}.csr.cnf
-  echo "default_md = sha256" >> ${SITE}.csr.cnf
-  echo "distinguished_name = dn" >> ${SITE}.csr.cnf
-  echo "[dn]" >> ${SITE}.csr.cnf
-  echo "C=US" >> ${SITE}.csr.cnf
-  echo "ST=Missouri" >> ${SITE}.csr.cnf
-  echo "L=Saint Louis" >> ${SITE}.csr.cnf
-  echo "O=WUSM" >> ${SITE}.csr.cnf
-  echo "OU=MPA" >> ${SITE}.csr.cnf
-  echo "emailAddress=vagrant@localhost" >> ${SITE}.csr.cnf
-  echo "CN = ${SITE}" >> ${SITE}.csr.cnf
+  echo "[req]" > ${HOSTNAME}.csr.cnf
+  echo "default_bits = 2048" >> ${HOSTNAME}.csr.cnf
+  echo "prompt = no" >> ${HOSTNAME}.csr.cnf
+  echo "default_md = sha256" >> ${HOSTNAME}.csr.cnf
+  echo "distinguished_name = dn" >> ${HOSTNAME}.csr.cnf
+  echo "[dn]" >> ${HOSTNAME}.csr.cnf
+  echo "C=US" >> ${HOSTNAME}.csr.cnf
+  echo "ST=Missouri" >> ${HOSTNAME}.csr.cnf
+  echo "L=Saint Louis" >> ${HOSTNAME}.csr.cnf
+  echo "O=WUSM" >> ${HOSTNAME}.csr.cnf
+  echo "OU=MPA" >> ${HOSTNAME}.csr.cnf
+  echo "emailAddress=vagrant@localhost" >> ${HOSTNAME}.csr.cnf
+  echo "CN = ${HOSTNAME}" >> ${HOSTNAME}.csr.cnf
 
   
   openssl req -new -sha256 -nodes -out ${SITE}.csr -newkey rsa:2048 -keyout ${SITE}.key -config <( cat ${SITE}.csr.cnf )
