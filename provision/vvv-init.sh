@@ -78,7 +78,7 @@ echo -e "\n Starting SSL operations.\n\n"
 # 
 # 
 # NOTE: You need to add the line 'openssl.cafile=/usr/local/share/ca-certificates/rootCA.pem' to /etc/php/7.0/fpm/php.ini (in the Vagrant)
-# You also need to double-click on the ${SITE}.crt and add it to the keychain
+# You also need to double-click on the ${HOSTNAME}.crt and add it to the keychain
 # 
 # 
 # This creates a Root certificate for the "server" to sign all of the site certificates. This only needs to be done once, so we check
@@ -121,8 +121,8 @@ if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${HOSTNAME}.crt" ]]; then
   echo "CN = ${HOSTNAME}" >> ${HOSTNAME}.csr.cnf
 
   
-  openssl req -new -sha256 -nodes -out ${SITE}.csr -newkey rsa:2048 -keyout ${SITE}.key -config <( cat ${SITE}.csr.cnf )
-  openssl x509 -req -in ${SITE}.csr -CA /usr/local/share/ca-certificates/rootCA.pem -CAkey /usr/local/share/ca-certificates/rootCA.key -CAcreateserial -out ${SITE}.crt -days 500 -sha256 -extfile v3.ext
+  openssl req -new -sha256 -nodes -out ${HOSTNAME}.csr -newkey rsa:2048 -keyout ${HOSTNAME}.key -config <( cat ${HOSTNAME}.csr.cnf )
+  openssl x509 -req -in ${HOSTNAME}.csr -CA /usr/local/share/ca-certificates/rootCA.pem -CAkey /usr/local/share/ca-certificates/rootCA.key -CAcreateserial -out ${HOSTNAME}.crt -days 500 -sha256 -extfile v3.ext
 
   sudo update-ca-certificates
 fi
