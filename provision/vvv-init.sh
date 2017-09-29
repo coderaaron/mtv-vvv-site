@@ -2,6 +2,7 @@
 # Provision WordPress Stable
 
 DB_NAME="${SITE//./}"
+HOSTNAME=$(get_primary_host)
 
 # Make a database, if we don't already have one
 echo -e "\nCreating database '${DB_NAME}' (if it's not already there)"
@@ -51,10 +52,10 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
 
   echo "Configuring WordPress Stable..."
   noroot wp core config --dbname=${DB_NAME} --dbuser=wp --dbpass=wp --quiet --path=wp/ --force --extra-php <<PHP
-define( 'WP_HOME', 'http://' . basename( realpath( __DIR__ . '/..' ) ) );
-define( 'WP_SITEURL', 'http://' . basename( realpath( __DIR__ . '/..' ) ) . '/wp' );
+define( 'WP_HOME', 'https//${HOSTNAME}' ) ) );
+define( 'WP_SITEURL', 'https://${HOSTNAME}/wp' );
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
-define( 'WP_CONTENT_URL', 'https://' . \$_SERVER['HTTP_HOST'] . '/wp-content' );
+define( 'WP_CONTENT_URL', 'https://${HOSTNAME}/wp-content' );
 
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
@@ -94,7 +95,6 @@ if [[ ! -e "/usr/local/share/ca-certificates/rootCA.pem" ]]; then
   sudo update-ca-certificates
 fi
 # Now create a certificate for this site and sign it with the server's Root certificate created above (or by the first site spun up on this Vagrant)
-HOSTNAME=$(get_hosts)
 if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${HOSTNAME}.crt" ]]; then
   echo -e "\n Creating site SSL certificate.\n\n"
   mkdir -p ${VVV_PATH_TO_SITE}/ssl
