@@ -52,7 +52,7 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
 
   echo "Configuring WordPress Stable..."
   noroot wp core config --dbname=${DB_NAME} --dbuser=wp --dbpass=wp --quiet --path=wp/ --force --extra-php <<PHP
-define( 'WP_HOME', 'https//${HOSTNAME}' );
+define( 'WP_HOME', 'https://${HOSTNAME}' );
 define( 'WP_SITEURL', 'https://${HOSTNAME}/wp' );
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 define( 'WP_CONTENT_URL', 'https://${HOSTNAME}/wp-content' );
