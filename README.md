@@ -57,7 +57,7 @@ While an SSL certificate is created for each site on creation, your browsers wil
 ### macOS
 After the initial run of MTVVV, open Keychain Access (in Applications -> Utilities). Make sure Keychain Access is unlocked before proceeded.
 
-![Main Keychain Access view](images/mac/ssl1.jpg){:width="50%"}
+![Main Keychain Access view](images/mac/ssl1.jpg){:height="75%" width="75%"}
 
 Drag `rootCA.pem` from your vagrant folder into Keychain Access. You'll now have an entry for `vvv.dev` in your list.
 
