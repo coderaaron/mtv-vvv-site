@@ -111,7 +111,7 @@ Click next.
 
 ![Initial import dialog box](images/win/ssl3.jpg)
 
-Now you need to navigate to your `vagrant` install folder.
+Now you need to navigate to your vagrant install's `/www` folder.
 
 ![Empty certificate import path](images/win/ssl4.jpg)
 
