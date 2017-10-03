@@ -59,7 +59,7 @@ After the initial run of MTVVV, open Keychain Access (in Applications -> Utiliti
 
 ![Main Keychain Access view](images/mac/ssl1.jpg)
 
-Drag `rootCA.pem` from your vagrant folder into Keychain Access. You'll now have an entry for `vvv.dev` in your list.
+Drag `rootCA.pem` from your vagrant `/www` folder into Keychain Access. You'll now have an entry for `vvv.dev` in your list.
 
 ![vvv.dev certificate selected](images/mac/ssl2.jpg)
 
