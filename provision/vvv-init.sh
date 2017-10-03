@@ -87,10 +87,15 @@ echo -e "\n Starting SSL operations.\n\n"
 # the directory where openssl expects certificates to be located. (/usr/local/share/ca-certificates/)
 cd ~
 if [[ ! -e "/usr/local/share/ca-certificates/rootCA.pem" ]]; then
+  response=`curl -s https://ipinfo.io/json`
+
+  country=`echo $response | sed -e 's/^.*"country"[ ]*:[ ]*"//' -e 's/".*//'`
+  region=`echo $response | sed -e 's/^.*"region"[ ]*:[ ]*"//' -e 's/".*//'`
+  city=`echo $response | sed -e 's/^.*"city"[ ]*:[ ]*"//' -e 's/".*//'`
   echo -e "\n Creating Root certificate.\n\n"
   cd /vagrant/
   openssl genrsa -out rootCA.key 2048
-  openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.pem -subj '/C=US/ST=Missouri/L=Saint Louis/O=WUSM/OU=MPA/emailAddress=vagrant@localhost/CN=vvv.dev'
+  openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.pem -subj '/C=${country}/ST=${region}/L=${city}/O=LocalDev/OU=VVVdeveloper/emailAddress=vagrant@localhost/CN=vvv.dev'
   sudo cp rootCA.pem /usr/local/share/ca-certificates/
   sudo cp rootCA.key /usr/local/share/ca-certificates/
   sudo update-ca-certificates
