@@ -102,6 +102,11 @@ if [[ ! -e "/usr/local/share/ca-certificates/rootCA.pem" ]]; then
 fi
 # Now create a certificate for this site and sign it with the server's Root certificate created above (or by the first site spun up on this Vagrant)
 if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${HOSTNAME}.crt" ]]; then
+  response=`curl -s https://ipinfo.io/json`
+
+  country=`echo $response | sed -e 's/^.*"country"[ ]*:[ ]*"//' -e 's/".*//'`
+  region=`echo $response | sed -e 's/^.*"region"[ ]*:[ ]*"//' -e 's/".*//'`
+  city=`echo $response | sed -e 's/^.*"city"[ ]*:[ ]*"//' -e 's/".*//'`
   echo -e "\n Creating site SSL certificate.\n\n"
   mkdir -p ${VVV_PATH_TO_SITE}/ssl
   cd ${VVV_PATH_TO_SITE}/ssl
@@ -118,11 +123,11 @@ if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${HOSTNAME}.crt" ]]; then
   echo "default_md = sha256" >> ${HOSTNAME}.csr.cnf
   echo "distinguished_name = dn" >> ${HOSTNAME}.csr.cnf
   echo "[dn]" >> ${HOSTNAME}.csr.cnf
-  echo "C=US" >> ${HOSTNAME}.csr.cnf
-  echo "ST=Missouri" >> ${HOSTNAME}.csr.cnf
-  echo "L=Saint Louis" >> ${HOSTNAME}.csr.cnf
-  echo "O=WUSM" >> ${HOSTNAME}.csr.cnf
-  echo "OU=MPA" >> ${HOSTNAME}.csr.cnf
+  echo "C=${country}" >> ${HOSTNAME}.csr.cnf
+  echo "ST=${region}" >> ${HOSTNAME}.csr.cnf
+  echo "L=${city}" >> ${HOSTNAME}.csr.cnf
+  echo "O=LocalDev" >> ${HOSTNAME}.csr.cnf
+  echo "OU=VVVdeveloper" >> ${HOSTNAME}.csr.cnf
   echo "emailAddress=vagrant@localhost" >> ${HOSTNAME}.csr.cnf
   echo "CN = ${HOSTNAME}" >> ${HOSTNAME}.csr.cnf
 
