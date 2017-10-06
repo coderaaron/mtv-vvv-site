@@ -79,14 +79,14 @@ echo -e "\n Starting SSL operations.\n\n"
 # SSL stuff, still in beta
 # 
 # 
-# NOTE: You need to add the line 'openssl.cafile=/usr/local/share/ca-certificates/rootCA.pem' to /etc/php/7.0/fpm/php.ini (in the Vagrant)
+# NOTE: You need to add the line 'openssl.cafile=/usr/local/share/ca-certificates/rootCA.crt' to /etc/php/7.0/fpm/php.ini (in the Vagrant)
 # You also need to double-click on the ${HOSTNAME}.crt and add it to the keychain
 # 
 # 
 # This creates a Root certificate for the "server" to sign all of the site certificates. This only needs to be done once, so we check
 # the directory where openssl expects certificates to be located. (/usr/local/share/ca-certificates/)
 cd ~
-if [[ ! -e "/usr/local/share/ca-certificates/rootCA.pem" ]]; then
+if [[ ! -e "/usr/local/share/ca-certificates/rootCA.crt" ]]; then
   response=`curl -s https://ipinfo.io/json`
 
   country=`echo $response | sed -e 's/^.*"country"[ ]*:[ ]*"//' -e 's/".*//'`
@@ -95,8 +95,8 @@ if [[ ! -e "/usr/local/share/ca-certificates/rootCA.pem" ]]; then
   echo -e "\n Creating Root certificate.\n\n"
   cd /vagrant/www/
   openssl genrsa -out rootCA.key 2048
-  openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.pem -subj "/C=${country}/ST=${region}/L=${city}/O=LocalDev/OU=VVVdeveloper/emailAddress=vagrant@localhost/CN=vvv.dev"
-  sudo cp rootCA.pem /usr/local/share/ca-certificates/
+  openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt -subj "/C=${country}/ST=${region}/L=${city}/O=LocalDev/OU=VVVdeveloper/emailAddress=vagrant@localhost/CN=vvv.dev"
+  sudo cp rootCA.crt /usr/local/share/ca-certificates/
   sudo cp rootCA.key /usr/local/share/ca-certificates/
   sudo update-ca-certificates
 fi
@@ -129,11 +129,11 @@ if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${HOSTNAME}.crt" ]]; then
   echo "O=LocalDev" >> ${HOSTNAME}.csr.cnf
   echo "OU=VVVdeveloper" >> ${HOSTNAME}.csr.cnf
   echo "emailAddress=vagrant@localhost" >> ${HOSTNAME}.csr.cnf
-  echo "CN = ${HOSTNAME}" >> ${HOSTNAME}.csr.cnf
+  echo "CN=${HOSTNAME}" >> ${HOSTNAME}.csr.cnf
 
   
   openssl req -new -sha256 -nodes -out ${HOSTNAME}.csr -newkey rsa:2048 -keyout ${HOSTNAME}.key -config <( cat ${HOSTNAME}.csr.cnf )
-  openssl x509 -req -in ${HOSTNAME}.csr -CA /usr/local/share/ca-certificates/rootCA.pem -CAkey /usr/local/share/ca-certificates/rootCA.key -CAcreateserial -out ${HOSTNAME}.crt -days 500 -sha256 -extfile v3.ext
+  openssl x509 -req -in ${HOSTNAME}.csr -CA /usr/local/share/ca-certificates/rootCA.crt -CAkey /usr/local/share/ca-certificates/rootCA.key -CAcreateserial -out ${HOSTNAME}.crt -days 500 -sha256 -extfile v3.ext
 
   sudo update-ca-certificates
 fi
