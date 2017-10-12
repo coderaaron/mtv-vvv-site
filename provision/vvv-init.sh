@@ -59,6 +59,7 @@ define( 'WP_SITEURL', 'https://${HOSTNAME}/wp' );
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 define( 'WP_CONTENT_URL', 'https://${HOSTNAME}/wp-content' );
 
+define( 'SCRIPT_DEBUG', true );
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 PHP
