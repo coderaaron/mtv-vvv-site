@@ -78,7 +78,7 @@ PHP
 
   # Since WP CLI works now, we can automate the install too, hurray!
   cd ${VVV_PATH_TO_SITE}/public_html
-  noroot wp core install --url=${HOSTNAME} --quiet --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
+  echo -e "\n\n\nnoroot wp core install --url=${HOSTNAME} --quiet --title='${SITE} Dev' --admin_name=admin --admin_email='admin@local.test' --admin_password='password'\n\n\n"
 
 fi
 
