@@ -121,7 +121,7 @@ if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${HOSTNAME}.crt" ]]; then
   echo -e "\n Creating site SSL certificate.\n\n"
   mkdir -p ${VVV_PATH_TO_SITE}/ssl
   cd ${VVV_PATH_TO_SITE}/ssl
-  echo "authorityKeyIdentifier=keyid,issuer" > v3.exct
+  echo "authorityKeyIdentifier=keyid,issuer" > v3.ext
   echo "basicConstraints=CA:FALSE" >> v3.ext
   echo "keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment" >> v3.ext
   echo "subjectAltName = @alt_names" >> v3.ext
