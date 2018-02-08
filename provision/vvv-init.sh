@@ -78,9 +78,10 @@ PHP
 
   # Since WP CLI works now, we can automate the install too, hurray!
   cd ${VVV_PATH_TO_SITE}/public_html
+  echo pwd
   echo -e "${HOSTNAME}\n\n"
   echo -e "${SITE} Dev\n\n"
-  noroot wp core install --debug --url="${HOSTNAME}" --quiet --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
+  noroot wp core install --debug --url="${HOSTNAME}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
 
 fi
 
@@ -120,7 +121,7 @@ if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${HOSTNAME}.crt" ]]; then
   echo -e "\n Creating site SSL certificate.\n\n"
   mkdir -p ${VVV_PATH_TO_SITE}/ssl
   cd ${VVV_PATH_TO_SITE}/ssl
-  echo "authorityKeyIdentifier=keyid,issuer" > v3.ext
+  echo "authorityKeyIdentifier=keyid,issuer" > v3.exct
   echo "basicConstraints=CA:FALSE" >> v3.ext
   echo "keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment" >> v3.ext
   echo "subjectAltName = @alt_names" >> v3.ext
