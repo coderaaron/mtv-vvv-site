@@ -81,7 +81,7 @@ PHP
   echo $PWD
   echo -e "${HOSTNAME}\n\n"
   echo -e "${SITE} Dev\n\n"
-  noroot wp core install --debug --url="${HOSTNAME}" --title="\"${SITE} Dev\"" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
+  noroot wp core install --debug --url="${HOSTNAME}" --title="\"${SITE} Dev\"" --admin_name=admin --admin_email="\"admin@local.test\"" --admin_password="\"password\""
 
 fi
 
