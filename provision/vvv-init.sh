@@ -2,6 +2,7 @@
 # Provision WordPress Stable
 
 DB_NAME="${SITE//./}"
+SITE_TITLE=`get_config_value 'site_title' "${DOMAIN}"`
 HOSTNAME=$(get_primary_host)
 
 # Make a database, if we don't already have one
@@ -78,7 +79,7 @@ PHP
 
   # Since WP CLI works now, we can automate the install too, hurray!
   cd ${VVV_PATH_TO_SITE}/public_html
-  noroot wp core install --debug --url="${HOSTNAME}" --title='"${SITE} Dev"' --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
+  noroot wp core install --debug --url="${HOSTNAME}" --title="${SITE_TITLE}" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
 
 fi
 
