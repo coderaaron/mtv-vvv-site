@@ -64,6 +64,8 @@ define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 PHP
 
+  noroot wp core install --debug --url="${HOSTNAME}" --title="\"${SITE} Dev\"" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
+
   mv wp/wp-config.php wp-config.php
   sed -i "s/require_once ABSPATH . 'wp-settings.php';/if \( ! \( defined\( 'WP_CLI' \) \&\& WP_CLI \) \) \{ require_once ABSPATH . 'wp-settings.php'; \}/g" wp-config.php
 
@@ -72,10 +74,6 @@ PHP
   # Undo the horrible hack
   cd ${VVV_PATH_TO_SITE}/public_html/wp
   mv wp-config.php.orig wp-config.php
-
-  # Since WP CLI works now, we can automate the install too, hurray!
-  cd ${VVV_PATH_TO_SITE}/public_html
-  noroot wp core install --debug --url="${HOSTNAME}" --title="\"${SITE} Dev\"" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
 
 fi
 
