@@ -22,7 +22,8 @@
 These are here to make WP CLI happy
 require_once(ABSPATH . 'wp-settings.php');
  */
-if ( $_SERVER['DOCUMENT_ROOT'] == "/vagrant/www/landlord" ) {
+if ( '/vagrant/www/landlord' == $_SERVER['DOCUMENT_ROOT'] ||
+	 '/srv/www/landlord'     == $_SERVER['DOCUMENT_ROOT'] ) {
 	$_SERVER['DOCUMENT_ROOT'] = getcwd();
 }
 /* End WP CLI stuff */
