@@ -1,8 +1,8 @@
 <?php
 
-define('DB_HOST', 'vvv.dev:3306');
+define('DB_HOST', 'localhost');
 
-define('DB_USER', 'external');
-define('DB_PASSWORD', 'external');
+define('DB_USER', 'wp');
+define('DB_PASSWORD', 'wp');
 
 
