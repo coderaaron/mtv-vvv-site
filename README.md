@@ -22,7 +22,7 @@ Uploads for each site are stored at:
 > `vagrant-local/www/[site-name]/public_html/wp-content/uploads`
 
 ## Instructions
-**NOTE**: This is super important. This does not currently work with VVV 2.0.0. You must be running the [`develop`](https://github.com/Varying-Vagrant-Vagrants/VVV/tree/develop) branch of VVV 2.
+**NOTE**: This is super important. This does not work with VVV 2.0.0. You must be running version 2.1.0 or higher.
 
 Install [Vagrant](https://www.vagrantup.com/downloads.html) and [VVV](https://varyingvagrantvagrants.org/docs/en-US/installation/) first. Don't forget to install the relevant Vagrant plugins as indicated on the VVV installation page.
 
