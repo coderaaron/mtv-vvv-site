@@ -73,6 +73,7 @@ PHP
   cd ${VVV_PATH_TO_SITE}/public_html/wp
   mv wp-config.php.orig wp-config.php
 
+  cd ${VVV_PATH_TO_SITE}/public_html
   noroot wp core install --debug --url="${HOSTNAME}" --title="\"${SITE} Dev\"" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
 
 fi
