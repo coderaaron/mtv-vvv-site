@@ -1,7 +1,7 @@
 # MTVVV
 **A Multitenant VVV setup**
 
-MTVVV is a site configuration for use with [VVV](https://varyingvagrantvagrants.org/).  It's based off the talk I gave at WordCamp St. Louis which in turn was based on a talk a WPCampus by [Cliff Seal](https://www.youtube.com/watch?v=88cMYrr4-5o).
+MTVVV is a site configuration for use with [VVV](https://varyingvagrantvagrants.org/).  It's based off the talk I gave at WordCamp St. Louis which in turn was based on a talk a WPCampus by [Cliff Seal](https://www.youtube.com/watch?v=88cMYrr4-5o). (Now with Auto-install!!!)
 
 ## Why?
 If you're developing a plugin that you want to test on multiple types of sites, MTVVV is ideal for that.
@@ -137,4 +137,4 @@ You're done! Verify that an entry issued to `vvv.dev` is in the list.
 Not tested. Perhaps try a solution such as [this one from Superuser](https://superuser.com/posts/719047/revisions)?
 
 ## Limitations
-• Currently does not auto-install/add an admin user to your WordPress install. You'll have to do that yourself. (Possibly coming in a future release)
+~~• Currently does not auto-install/add an admin user to your WordPress install. You'll have to do that yourself. (Possibly coming in a future release)~~
