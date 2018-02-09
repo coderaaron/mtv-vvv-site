@@ -67,9 +67,6 @@ PHP
   mv wp/wp-config.php wp-config.php
   sed -i "s/require_once ABSPATH . 'wp-settings.php';/if \( ! \( defined\( 'WP_CLI' \) \&\& WP_CLI \) \) \{ require_once ABSPATH . 'wp-settings.php'; \}/g" wp-config.php
 
-  #echo "Installing WordPress Stable..."
-  #noroot wp core install --url=local.wordpress.dev --quiet --path=wp/ --title="Local WordPress Dev" --admin_name=admin --admin_email="admin@local.dev" --admin_password="password"
-
   cp ${VVV_PATH_TO_SITE}/provision/index.php ${VVV_PATH_TO_SITE}/public_html/index.php
 
   # Undo the horrible hack
@@ -78,7 +75,7 @@ PHP
 
   # Since WP CLI works now, we can automate the install too, hurray!
   cd ${VVV_PATH_TO_SITE}/public_html
-  noroot wp core --path=${VVV_PATH_TO_SITE}/public_html install --debug --url="${HOSTNAME}" --title="\"${SITE} Dev\"" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
+  noroot wp core install --debug --url="${HOSTNAME}" --title="\"${SITE} Dev\"" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
 
 fi
 
