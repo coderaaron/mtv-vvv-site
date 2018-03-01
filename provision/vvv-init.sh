@@ -36,8 +36,28 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
   # will also create the two parent folders
   mkdir -p ${VVV_PATH_TO_SITE}/public_html/wp-content/uploads
   cd ${VVV_PATH_TO_SITE}/public_html
+
   # Symlink to the main WordPress installation
-  ln -s ../../landlord wp
+  # Q: Why are we doing all the files and folders individually?
+  # A: Because this is a workaround for WP-CLI issues with multi-tenant installs.
+  ln -s ../../landlord/index.php index.php
+  ln -s ../../landlord/license.txt license.txt
+  ln -s ../../landlord/readme.html readme.html
+  ln -s ../../landlord/wp-activate.php wp-activate.php
+  ln -s ../../landlord/wp-admin wp-admin
+  ln -s ../../landlord/wp-blog-header.php wp-blog.header.php
+  ln -s ../../landlord/wp-comments-post.php wp-comments-post.php
+  ln -s ../../landlord/wp-config-sample.php wp-config-sample.php
+  ln -s ../../landlord/wp-cron.php wp-cron.php
+  ln -s ../../landlord/wp-includes wp-includes
+  ln -s ../../landlord/wp-links-opml.php wp-links-opml.php
+  ln -s ../../landlord/wp-load.php wp-load.php
+  ln -s ../../landlord/wp-login.php wp-login.php
+  ln -s ../../landlord/wp-mail.php wp-mail.php
+  ln -s ../../landlord/wp-settings.php wp-settings.php
+  ln -s ../../landlord/wp-signup.php wp-signup.php
+  ln -s ../../landlord/wp-trackback.php wp-trackback.php
+  ln -s ../../landlord/xmlrpc.php xmlrpc.php
 
   cd ${VVV_PATH_TO_SITE}/public_html/wp-content
   # Symlink the plugins and themes to the deafult install's plugins and themes
@@ -47,15 +67,15 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
   ln -s ../../../landlord/wp-content/themes themes
 
   # A horrible hack, but we have to do it
-  cd ${VVV_PATH_TO_SITE}/public_html/wp
-  mv wp-config.php wp-config.php.orig
+  cd ${VVV_PATH_TO_SITE}/public_html
+  cp ../../landlord/wp-config.php wp-config.php
 
   cd ${VVV_PATH_TO_SITE}/public_html
 
   echo "Configuring WordPress Stable..."
-  noroot wp core config --dbname=${DB_NAME} --dbuser=wp --dbpass=wp --quiet --path=wp/ --force --extra-php <<PHP
+  noroot wp core config --dbname=${DB_NAME} --dbuser=wp --dbpass=wp --quiet --force --extra-php <<PHP
 define( 'WP_HOME', 'https://${HOSTNAME}' );
-define( 'WP_SITEURL', 'https://${HOSTNAME}/wp' );
+define( 'WP_SITEURL', 'https://${HOSTNAME}' );
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 define( 'WP_CONTENT_URL', 'https://${HOSTNAME}/wp-content' );
 
@@ -64,14 +84,10 @@ define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 PHP
 
-  mv wp/wp-config.php wp-config.php
-  sed -i "s/require_once ABSPATH . 'wp-settings.php';/if \( ! \( defined\( 'WP_CLI' \) \&\& WP_CLI \) \) \{ require_once ABSPATH . 'wp-settings.php'; \}/g" wp-config.php
+  # mv wp/wp-config.php wp-config.php
+  # sed -i "s/require_once ABSPATH . 'wp-settings.php';/if \( ! \( defined\( 'WP_CLI' \) \&\& WP_CLI \) \) \{ require_once ABSPATH . 'wp-settings.php'; \}/g" wp-config.php
 
   cp ${VVV_PATH_TO_SITE}/provision/index.php ${VVV_PATH_TO_SITE}/public_html/index.php
-
-  # Undo the horrible hack
-  cd ${VVV_PATH_TO_SITE}/public_html/wp
-  mv wp-config.php.orig wp-config.php
 
   cd ${VVV_PATH_TO_SITE}/public_html
   noroot wp core install --debug --url="${HOSTNAME}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
