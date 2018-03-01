@@ -40,12 +40,11 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
   # Symlink to the main WordPress installation
   # Q: Why are we doing all the files and folders individually?
   # A: Because this is a workaround for WP-CLI issues with multi-tenant installs.
-  ln -s ../../landlord/index.php index.php
   ln -s ../../landlord/license.txt license.txt
   ln -s ../../landlord/readme.html readme.html
   ln -s ../../landlord/wp-activate.php wp-activate.php
   ln -s ../../landlord/wp-admin wp-admin
-  ln -s ../../landlord/wp-blog-header.php wp-blog.header.php
+  ln -s ../../landlord/wp-blog-header.php wp-blog-header.php
   ln -s ../../landlord/wp-comments-post.php wp-comments-post.php
   ln -s ../../landlord/wp-config-sample.php wp-config-sample.php
   ln -s ../../landlord/wp-cron.php wp-cron.php
