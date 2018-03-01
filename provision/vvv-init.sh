@@ -41,8 +41,9 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
 
   cd ${VVV_PATH_TO_SITE}/public_html/wp-content
   # Symlink the plugins and themes to the deafult install's plugins and themes
+  mkdir ../../../landlord/wp-content/mu-plugins
   ln -s ../../../landlord/wp-content/mu-plugins mu-plugins
-  ln -s ../../../landlord/wp-content/plugins plugins
+  ln -s ../../../landlord/wp-content/plugins plugins 
   ln -s ../../../landlord/wp-content/themes themes
 
   # A horrible hack, but we have to do it
@@ -58,19 +59,22 @@ define( 'WP_SITEURL', 'https://${HOSTNAME}/wp' );
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 define( 'WP_CONTENT_URL', 'https://${HOSTNAME}/wp-content' );
 
+define( 'SCRIPT_DEBUG', true );
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 PHP
-  mv wp/wp-config.php wp-config.php
 
-  #echo "Installing WordPress Stable..."
-  #noroot wp core install --url=local.wordpress.dev --quiet --path=wp/ --title="Local WordPress Dev" --admin_name=admin --admin_email="admin@local.dev" --admin_password="password"
+  mv wp/wp-config.php wp-config.php
+  sed -i "s/require_once ABSPATH . 'wp-settings.php';/if \( ! \( defined\( 'WP_CLI' \) \&\& WP_CLI \) \) \{ require_once ABSPATH . 'wp-settings.php'; \}/g" wp-config.php
 
   cp ${VVV_PATH_TO_SITE}/provision/index.php ${VVV_PATH_TO_SITE}/public_html/index.php
 
   # Undo the horrible hack
   cd ${VVV_PATH_TO_SITE}/public_html/wp
   mv wp-config.php.orig wp-config.php
+
+  cd ${VVV_PATH_TO_SITE}/public_html
+  noroot wp core install --debug --url="${HOSTNAME}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
 
 fi
 
@@ -79,24 +83,34 @@ echo -e "\n Starting SSL operations.\n\n"
 # SSL stuff, still in beta
 # 
 # 
-# NOTE: You need to add the line 'openssl.cafile=/usr/local/share/ca-certificates/rootCA.pem' to /etc/php/7.0/fpm/php.ini (in the Vagrant)
+# NOTE: You need to add the line 'openssl.cafile=/usr/local/share/ca-certificates/rootCA.crt' to /etc/php/7.0/fpm/php.ini (in the Vagrant)
 # You also need to double-click on the ${HOSTNAME}.crt and add it to the keychain
 # 
 # 
 # This creates a Root certificate for the "server" to sign all of the site certificates. This only needs to be done once, so we check
 # the directory where openssl expects certificates to be located. (/usr/local/share/ca-certificates/)
 cd ~
-if [[ ! -e "/usr/local/share/ca-certificates/rootCA.pem" ]]; then
+if [[ ! -e "/usr/local/share/ca-certificates/rootCA.crt" ]]; then
+  response=`curl -s https://ipinfo.io/json`
+
+  country=`echo $response | sed -e 's/^.*"country"[ ]*:[ ]*"//' -e 's/".*//'`
+  region=`echo $response | sed -e 's/^.*"region"[ ]*:[ ]*"//' -e 's/".*//'`
+  city=`echo $response | sed -e 's/^.*"city"[ ]*:[ ]*"//' -e 's/".*//'`
   echo -e "\n Creating Root certificate.\n\n"
-  cd /vagrant/
+  cd /vagrant/www/
   openssl genrsa -out rootCA.key 2048
-  openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.pem -subj '/C=US/ST=Missouri/L=Saint Louis/O=WUSM/OU=MPA/emailAddress=vagrant@localhost/CN=vvv.dev'
-  sudo cp rootCA.pem /usr/local/share/ca-certificates/
+  openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt -subj "/C=${country}/ST=${region}/L=${city}/O=LocalDev/OU=VVVdeveloper/emailAddress=vagrant@localhost/CN=vvv.dev"
+  sudo cp rootCA.crt /usr/local/share/ca-certificates/
   sudo cp rootCA.key /usr/local/share/ca-certificates/
   sudo update-ca-certificates
 fi
 # Now create a certificate for this site and sign it with the server's Root certificate created above (or by the first site spun up on this Vagrant)
 if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${HOSTNAME}.crt" ]]; then
+  response=`curl -s https://ipinfo.io/json`
+
+  country=`echo $response | sed -e 's/^.*"country"[ ]*:[ ]*"//' -e 's/".*//'`
+  region=`echo $response | sed -e 's/^.*"region"[ ]*:[ ]*"//' -e 's/".*//'`
+  city=`echo $response | sed -e 's/^.*"city"[ ]*:[ ]*"//' -e 's/".*//'`
   echo -e "\n Creating site SSL certificate.\n\n"
   mkdir -p ${VVV_PATH_TO_SITE}/ssl
   cd ${VVV_PATH_TO_SITE}/ssl
@@ -113,17 +127,17 @@ if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${HOSTNAME}.crt" ]]; then
   echo "default_md = sha256" >> ${HOSTNAME}.csr.cnf
   echo "distinguished_name = dn" >> ${HOSTNAME}.csr.cnf
   echo "[dn]" >> ${HOSTNAME}.csr.cnf
-  echo "C=US" >> ${HOSTNAME}.csr.cnf
-  echo "ST=Missouri" >> ${HOSTNAME}.csr.cnf
-  echo "L=Saint Louis" >> ${HOSTNAME}.csr.cnf
-  echo "O=WUSM" >> ${HOSTNAME}.csr.cnf
-  echo "OU=MPA" >> ${HOSTNAME}.csr.cnf
+  echo "C=${country}" >> ${HOSTNAME}.csr.cnf
+  echo "ST=${region}" >> ${HOSTNAME}.csr.cnf
+  echo "L=${city}" >> ${HOSTNAME}.csr.cnf
+  echo "O=LocalDev" >> ${HOSTNAME}.csr.cnf
+  echo "OU=VVVdeveloper" >> ${HOSTNAME}.csr.cnf
   echo "emailAddress=vagrant@localhost" >> ${HOSTNAME}.csr.cnf
-  echo "CN = ${HOSTNAME}" >> ${HOSTNAME}.csr.cnf
+  echo "CN=${HOSTNAME}" >> ${HOSTNAME}.csr.cnf
 
   
   openssl req -new -sha256 -nodes -out ${HOSTNAME}.csr -newkey rsa:2048 -keyout ${HOSTNAME}.key -config <( cat ${HOSTNAME}.csr.cnf )
-  openssl x509 -req -in ${HOSTNAME}.csr -CA /usr/local/share/ca-certificates/rootCA.pem -CAkey /usr/local/share/ca-certificates/rootCA.key -CAcreateserial -out ${HOSTNAME}.crt -days 500 -sha256 -extfile v3.ext
+  openssl x509 -req -in ${HOSTNAME}.csr -CA /usr/local/share/ca-certificates/rootCA.crt -CAkey /usr/local/share/ca-certificates/rootCA.key -CAcreateserial -out ${HOSTNAME}.crt -days 500 -sha256 -extfile v3.ext
 
   sudo update-ca-certificates
 fi

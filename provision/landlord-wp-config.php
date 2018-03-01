@@ -18,5 +18,15 @@
  * @package WordPress
  */
 
+/*
+These are here to make WP CLI happy
+require_once(ABSPATH . 'wp-settings.php');
+ */
+if ( '/vagrant/www/landlord' == $_SERVER['DOCUMENT_ROOT'] ||
+	 '/srv/www/landlord'     == $_SERVER['DOCUMENT_ROOT'] ) {
+	$_SERVER['DOCUMENT_ROOT'] = getcwd();
+}
+/* End WP CLI stuff */
+
 // NOTE: this WordPress install is configured for multitenancy
-include_once( $_SERVER['DOCUMENT_ROOT'] . '/wp-config.php' );
+require $_SERVER['DOCUMENT_ROOT'] . '/wp-config.php';

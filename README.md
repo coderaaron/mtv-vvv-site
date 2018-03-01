@@ -1,7 +1,7 @@
 # MTVVV
 **A Multitenant VVV setup**
 
-MTVVV is a site configuration for use with [VVV](https://varyingvagrantvagrants.org/).  It's based off the talk I gave at WordCamp St. Louis which in turn was based on a talk a WPCampus by [Cliff Seal](https://www.youtube.com/watch?v=88cMYrr4-5o).
+MTVVV is a site configuration for use with [VVV](https://varyingvagrantvagrants.org/).  It's based off the talk I gave at WordCamp St. Louis which in turn was based on a talk a WPCampus by [Cliff Seal](https://www.youtube.com/watch?v=88cMYrr4-5o). (Now with Auto-install!!!)
 
 ## Why?
 If you're developing a plugin that you want to test on multiple types of sites, MTVVV is ideal for that.
@@ -22,7 +22,7 @@ Uploads for each site are stored at:
 > `vagrant-local/www/[site-name]/public_html/wp-content/uploads`
 
 ## Instructions
-**NOTE**: This is super important. This does not currently work with VVV 2.0.0. You must be running the [`develop`](https://github.com/Varying-Vagrant-Vagrants/VVV/tree/develop) branch of VVV 2.
+**NOTE**: This is super important. This does not work with VVV 2.0.0. You must be running version 2.1.0 or higher.
 
 Install [Vagrant](https://www.vagrantup.com/downloads.html) and [VVV](https://varyingvagrantvagrants.org/docs/en-US/installation/) first. Don't forget to install the relevant Vagrant plugins as indicated on the VVV installation page.
 
@@ -59,7 +59,7 @@ After the initial run of MTVVV, open Keychain Access (in Applications -> Utiliti
 
 ![Main Keychain Access view](images/mac/ssl1.jpg)
 
-Drag `rootCA.pem` from your vagrant folder into Keychain Access. You'll now have an entry for `vvv.dev` in your list.
+Drag `rootCA.pem` from your vagrant `/www` folder into Keychain Access. You'll now have an entry for `vvv.dev` in your list.
 
 ![vvv.dev certificate selected](images/mac/ssl2.jpg)
 
@@ -111,7 +111,7 @@ Click next.
 
 ![Initial import dialog box](images/win/ssl3.jpg)
 
-Now you need to navigate to your `vagrant` install folder.
+Now you need to navigate to your vagrant install's `/www` folder.
 
 ![Empty certificate import path](images/win/ssl4.jpg)
 
@@ -137,4 +137,4 @@ You're done! Verify that an entry issued to `vvv.dev` is in the list.
 Not tested. Perhaps try a solution such as [this one from Superuser](https://superuser.com/posts/719047/revisions)?
 
 ## Limitations
-• Currently does not auto-install/add an admin user to your WordPress install. You'll have to do that yourself. (Possibly coming in a future release)
+~~• Currently does not auto-install/add an admin user to your WordPress install. You'll have to do that yourself. (Possibly coming in a future release)~~
