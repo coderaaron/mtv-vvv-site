@@ -85,7 +85,7 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
   define( 'WP_DEBUG_LOG', true );
 PHP
 
-  noroot wp core install --debug --url="${HOSTNAME}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password" --path="${VVV_PATH_TO_SITE}"
+  noroot wp core install --debug --url="${HOSTNAME}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password" --path="${VVV_PATH_TO_SITE}/public_html"
 
 fi
 
