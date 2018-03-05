@@ -69,26 +69,22 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
   cd ${VVV_PATH_TO_SITE}/public_html
   cp ../../landlord/wp-config.php wp-config.php
 
-  cd ${VVV_PATH_TO_SITE}/public_html
-
   # mv wp/wp-config.php wp-config.php
   sed -i "s/require_once ABSPATH . 'wp-settings.php';/if \( ! function_exists\( 'wp_unregister_GLOBALS' \) \) \{ require_once \( ABSPATH . 'wp-settings.php' \); \}/g" wp-config.php
 
   echo "Configuring WordPress Stable..."
   noroot wp core config --dbname=${DB_NAME} --dbuser=wp --dbpass=wp --quiet --force --extra-php <<PHP
-define( 'WP_HOME', 'https://${HOSTNAME}' );
-define( 'WP_SITEURL', 'https://${HOSTNAME}' );
-define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
-define( 'WP_CONTENT_URL', 'https://${HOSTNAME}/wp-content' );
+  define( 'WP_HOME', 'https://${HOSTNAME}' );
+  define( 'WP_SITEURL', 'https://${HOSTNAME}' );
+  define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
+  define( 'WP_CONTENT_URL', 'https://${HOSTNAME}/wp-content' );
 
-define( 'SCRIPT_DEBUG', true );
-define( 'WP_DEBUG', true );
-define( 'WP_DEBUG_LOG', true );
+  define( 'SCRIPT_DEBUG', true );
+  define( 'WP_DEBUG', true );
+  define( 'WP_DEBUG_LOG', true );
 PHP
 
-  cp ${VVV_PATH_TO_SITE}/provision/index.php ${VVV_PATH_TO_SITE}/public_html/index.php
-
-  cd ${VVV_PATH_TO_SITE}/public_html
+  noroot wp core install --debug --url="${HOSTNAME}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password" --path="${VVV_PATH_TO_SITE}"
 
 fi
 
@@ -157,5 +153,3 @@ if [[ ! -e "${VVV_PATH_TO_SITE}/ssl/${HOSTNAME}.crt" ]]; then
 fi
 
 echo -e "\n SSL operations done.\n\n"
-
-noroot wp core install --debug --url="${HOSTNAME}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
