@@ -84,7 +84,7 @@ define( 'WP_DEBUG_LOG', true );
 PHP
 
   # mv wp/wp-config.php wp-config.php
-  sed -i "s/require_once ABSPATH . 'wp-settings.php';/if \( ! \( function_exists\( 'wp_unregister_GLOBALS' \) \&\& WP_CLI \) \) \{ require_once ABSPATH . 'wp-settings.php'; \}/g" wp-config.php
+  sed -i "s/require_once ABSPATH . 'wp-settings.php';/if \( ! \( function_exists\( 'wp_unregister_GLOBALS' \) \) \{ require_once ABSPATH . 'wp-settings.php'; \}/g" wp-config.php
 
   cp ${VVV_PATH_TO_SITE}/provision/index.php ${VVV_PATH_TO_SITE}/public_html/index.php
 
