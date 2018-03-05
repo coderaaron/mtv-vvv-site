@@ -42,6 +42,7 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
   # A: Because this is a workaround for WP-CLI issues with multi-tenant installs.
   ln -s ../../landlord/license.txt license.txt
   ln -s ../../landlord/readme.html readme.html
+  ln -s ../../landlord/index.php index.php
   ln -s ../../landlord/wp-activate.php wp-activate.php
   ln -s ../../landlord/wp-admin wp-admin
   ln -s ../../landlord/wp-blog-header.php wp-blog-header.php
