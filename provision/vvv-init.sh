@@ -9,9 +9,6 @@ WP_TYPE=`get_config_value 'wp_type' "single"`
 DB_NAME=`get_config_value 'db_name' "${VVV_SITE_NAME}"`
 DB_NAME=${DB_NAME//[\\\/\.\<\>\:\"\'\|\?\!\*-]/}
 
-DB_NAME="${SITE//./}"
-HOSTNAME=$(get_primary_host)
-
 # Make a database, if we don't already have one
 echo -e "\nCreating database '${DB_NAME}' (if it's not already there)"
 mysql -u root --password=root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME}"
@@ -62,10 +59,10 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
 
   echo "Configuring WordPress Stable..."
   noroot wp core config --dbname=${DB_NAME} --dbuser=wp --dbpass=wp --quiet --path=wp/ --force --extra-php <<PHP
-define( 'WP_HOME', 'https://${HOSTNAME}' );
-define( 'WP_SITEURL', 'https://${HOSTNAME}/wp' );
+define( 'WP_HOME', 'https://${DOMAIN}' );
+define( 'WP_SITEURL', 'https://${DOMAIN}/wp' );
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
-define( 'WP_CONTENT_URL', 'https://${HOSTNAME}/wp-content' );
+define( 'WP_CONTENT_URL', 'https://${DOMAIN}/wp-content' );
 
 define( 'SCRIPT_DEBUG', true );
 define( 'WP_DEBUG', true );
@@ -82,7 +79,7 @@ PHP
   mv wp-config.php.orig wp-config.php
 
   cd ${VVV_PATH_TO_SITE}/public_html
-  noroot wp core install --debug --url="${HOSTNAME}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
+  noroot wp core install --debug --url="${DOMAIN}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
 
 fi
 
