@@ -80,7 +80,8 @@ PHP
 
   cd ${VVV_PATH_TO_SITE}/public_html
   noroot wp core install --debug --url="${DOMAIN}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
-
+  noroot wp theme activate wutheme_chauvenet
+  noroot wp plugin activate advanced-custom-fields-pro co-authors-plus debug-bar debug-bar-console debug-bar-cron jetpack jetpack-dev-mode query-monitor regenerate-thumbnails rewrite-rules-inspector user-switching washu-tailor washu-tailor-tweaks what-the-file"
 fi
 
 cp -f "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf.tmpl" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
