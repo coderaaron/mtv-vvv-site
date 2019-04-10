@@ -29,8 +29,8 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/../landlord" ]]; then
   noroot tar -xvf latest.tar.gz
   mv wordpress landlord
   rm latest.tar.gz
-  
-  noroot cp ${VVV_PATH_TO_SITE}/provision/landlord-wp-config.php ${VVV_PATH_TO_SITE}/../landlord/wp-config.php 
+
+  noroot cp ${VVV_PATH_TO_SITE}/provision/landlord-wp-config.php ${VVV_PATH_TO_SITE}/../landlord/wp-config.php
 fi
 
 # Install and configure the latest stable version of WordPress
@@ -48,7 +48,7 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
   # Symlink the plugins and themes to the deafult install's plugins and themes
   mkdir ../../../landlord/wp-content/mu-plugins
   ln -s ../../../landlord/wp-content/mu-plugins mu-plugins
-  ln -s ../../../landlord/wp-content/plugins plugins 
+  ln -s ../../../landlord/wp-content/plugins plugins
   ln -s ../../../landlord/wp-content/themes themes
 
   # A horrible hack, but we have to do it
@@ -80,12 +80,11 @@ PHP
 
   cd ${VVV_PATH_TO_SITE}/public_html
   noroot wp core install --debug --url="${DOMAIN}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
-  noroot wp theme activate wutheme_chauvenet
-  noroot wp plugin activate advanced-custom-fields-pro co-authors-plus debug-bar debug-bar-console debug-bar-cron jetpack jetpack-dev-mode query-monitor regenerate-thumbnails rewrite-rules-inspector user-switching washu-tailor washu-tailor-tweaks what-the-file"
+  # noroot wp theme activate wutheme_chauvenet
+  # noroot wp plugin activate advanced-custom-fields-pro co-authors-plus debug-bar debug-bar-console debug-bar-cron jetpack jetpack-dev-mode query-monitor regenerate-thumbnails rewrite-rules-inspector user-switching washu-tailor washu-tailor-tweaks what-the-file"
 fi
 
 cp -f "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf.tmpl" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
-sed -i "s#{{DOMAINS_HERE}}#${DOMAINS}#" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
 
 if [ -n "$(type -t is_utility_installed)" ] && [ "$(type -t is_utility_installed)" = function ] && `is_utility_installed core tls-ca`; then
     sed -i "s#{{TLS_CERT}}#ssl_certificate /vagrant/certificates/${VVV_SITE_NAME}/dev.crt;#" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
