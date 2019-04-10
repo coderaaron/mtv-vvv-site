@@ -1,2 +1,2 @@
-require:
-  mtv.php
+require: mtv.php
+path: public_html
