@@ -43,6 +43,7 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
   cd ${VVV_PATH_TO_SITE}/public_html
   # Symlink to the main WordPress installation
   ln -s ../../landlord wp
+  ln -s wp/wp-admin/index.php wp-admin
 
   cd ${VVV_PATH_TO_SITE}/public_html/wp-content
   # Symlink the plugins and themes to the deafult install's plugins and themes
