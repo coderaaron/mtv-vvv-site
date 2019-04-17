@@ -64,6 +64,7 @@ define( 'WP_HOME', 'https://${DOMAIN}' );
 define( 'WP_SITEURL', 'https://${DOMAIN}/wp' );
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/wp-content' );
 define( 'WP_CONTENT_URL', 'https://${DOMAIN}/wp-content' );
+define( 'FORCE_SSL_ADMIN', true );
 
 define( 'SCRIPT_DEBUG', true );
 define( 'WP_DEBUG', true );
