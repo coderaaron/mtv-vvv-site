@@ -1,24 +1,31 @@
 #!/usr/bin/env bash
-# Provision WordPress Stable
+# Provision Multi-tennant WordPress Stable
 
-DOMAIN=`get_primary_host "${VVV_SITE_NAME}".test`
-DOMAINS=`get_hosts "${DOMAIN}"`
-SITE_TITLE=`get_config_value 'site_title' "${DOMAIN}"`
-WP_VERSION=`get_config_value 'wp_version' 'latest'`
-WP_TYPE=`get_config_value 'wp_type' "single"`
-DB_NAME=`get_config_value 'db_name' "${VVV_SITE_NAME}"`
-DB_NAME=${DB_NAME//[\\\/\.\<\>\:\"\'\|\?\!\*-]/}
+set -eo pipefail
+
+echo " * Custom multi-tennant provisioner - downloads and installs a copy of WP stable (if needed) and sets up tennant site"
+
+# fetch the first host as the primary domain. If none is available, generate a default using the site name
+DOMAIN=$(get_primary_host "${VVV_SITE_NAME}".test)
+SITE_TITLE=$(get_config_value 'site_title' "${DOMAIN}")
+WP_VERSION=$(get_config_value 'wp_version' 'latest')
+WP_LOCALE=$(get_config_value 'locale' 'en_US')
+WP_TYPE=$(get_config_value 'wp_type' "single")
+DB_NAME=$(get_config_value 'db_name' "${VVV_SITE_NAME}")
+DB_NAME=${DB_NAME//[\\\/\.\<\>\:\"\'\|\?\!\*]/}
 
 # Make a database, if we don't already have one
-echo -e "\nCreating database '${DB_NAME}' (if it's not already there)"
-mysql -u root --password=root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME}"
-mysql -u root --password=root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO wp@localhost IDENTIFIED BY 'wp';"
-echo -e "\n DB operations done.\n\n"
+echo -e " * Creating database '${DB_NAME}' (if it's not already there)"
+mysql -u root --password=root -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`"
+echo -e " * Granting the wp user priviledges to the '${DB_NAME}' database"
+mysql -u root --password=root -e "GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO wp@localhost IDENTIFIED BY 'wp';"
+echo -e " * DB operations done."
 
-# Nginx Logs
-mkdir -p ${VVV_PATH_TO_SITE}/log
-touch ${VVV_PATH_TO_SITE}/log/error.log
-touch ${VVV_PATH_TO_SITE}/log/access.log
+
+echo " * Setting up the log subfolder for Nginx logs"
+noroot mkdir -p "${VVV_PATH_TO_SITE}/log"
+noroot touch "${VVV_PATH_TO_SITE}/log/nginx-error.log"
+noroot touch "${VVV_PATH_TO_SITE}/log/nginx-access.log"
 
 # Set up our tenant's landlord
 if [[ ! -d "${VVV_PATH_TO_SITE}/../landlord" ]]; then
