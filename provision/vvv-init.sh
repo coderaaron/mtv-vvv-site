@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 # Provision Multi-tennant WordPress Stable
 
+is_utility_installed() {
+  local utilities=$(shyaml get-values "utilities.${1}" 2> /dev/null < ${VVV_CONFIG})
+  for utility in ${utilities}; do
+    if [[ "${utility}" == "${2}" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 set -eo pipefail
 
 echo " * Custom multi-tennant provisioner - downloads and installs a copy of WP stable (if needed) and sets up tennant site"
@@ -93,11 +103,7 @@ fi
 
 cp -f "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf.tmpl" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
 
-#if [ -n "$(type -t is_utility_installed)" ] && [ "$(type -t is_utility_installed)" = function ] && `is_utility_installed core tls-ca`; then
-if [ true ]; then
-    sed -i "s#{{TLS_CERT}}#ssl_certificate /srv/certificates/${VVV_SITE_NAME}/dev.crt;#" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
-    sed -i "s#{{TLS_KEY}}#ssl_certificate_key /srv/certificates/${VVV_SITE_NAME}/dev.key;#" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
-else
-    sed -i "s#{{TLS_CERT}}##" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
-    sed -i "s#{{TLS_KEY}}##" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
-fi
+echo "***** SKIPPING CHECKS *****"
+
+sed -i "s#{{TLS_CERT}}#ssl_certificate /srv/certificates/${VVV_SITE_NAME}/dev.crt;#" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
+sed -i "s#{{TLS_KEY}}#ssl_certificate_key /srv/certificates/${VVV_SITE_NAME}/dev.key;#" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
