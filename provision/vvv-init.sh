@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 # Provision Multi-tennant WordPress Stable
 
+is_utility_installed() {
+  local utilities=$(shyaml get-values "utilities.${1}" 2> /dev/null < ${VVV_CONFIG})
+  for utility in ${utilities}; do
+    if [[ "${utility}" == "${2}" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 set -eo pipefail
 
 echo " * Custom multi-tennant provisioner - downloads and installs a copy of WP stable (if needed) and sets up tennant site"
