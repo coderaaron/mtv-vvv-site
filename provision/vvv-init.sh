@@ -101,7 +101,7 @@ PHP
   noroot wp core install --debug --url="${DOMAIN}" --title="${SITE} Dev" --admin_name=admin --admin_email="admin@local.test" --admin_password="password"
 fi
 
-cp -f "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf.tmpl" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
+cp -f "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf" "${VVV_PATH_TO_SITE}/provision/vvv-nginx.conf"
 
 echo "***** SKIPPING CHECKS *****"
 
