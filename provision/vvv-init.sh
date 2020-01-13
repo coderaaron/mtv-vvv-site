@@ -64,7 +64,9 @@ if [[ ! -d "${VVV_PATH_TO_SITE}/public_html" ]]; then
 
   cd ${VVV_PATH_TO_SITE}/public_html/wp-content
   # Symlink the plugins and themes to the deafult install's plugins and themes
-  mkdir ../../../landlord/wp-content/mu-plugins
+  if [[ ! -d "../../../landlord/wp-content/mu-plugins" ]]; then
+    mkdir ../../../landlord/wp-content/mu-plugins
+  fi
   ln -s ../../../landlord/wp-content/mu-plugins mu-plugins
   ln -s ../../../landlord/wp-content/plugins plugins
   ln -s ../../../landlord/wp-content/themes themes
