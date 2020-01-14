@@ -91,7 +91,13 @@ define( 'WP_DEBUG_LOG', true );
 PHP
 
   mv wp/wp-config.php wp-config.php
-  sed -i "s/require_once ABSPATH . 'wp-settings.php';/if \( ! \( defined\( 'WP_CLI' \) \&\& WP_CLI \) \) \{ require_once ABSPATH . 'wp-settings.php'; \}/g" wp-config.php
+  sed -i "s/require_once ABSPATH . 'wp-settings.php';/if ( ! \( defined\( 'WP_CLI' \) \&\& WP_CLI \) \) \{ require_once ABSPATH . 'wp-settings.php'; \}/g" wp-config.php
+  sed -i '/MySQL database username/ a if ( ! defined( '\''DB_USER'\'' ) ) {' wp-config.php
+  sed -i '/define( '\''DB_USER/ a }' wp-config.php
+  sed -i '/MySQL database password/ a if ( ! defined( '\''DB_PASSWORD'\'' ) ) {' wp-config.php
+  sed -i '/define( '\''DB_PASSWORD/ a }' wp-config.php
+  sed -i '/MySQL hostname/ a if ( ! defined( '\''DB_HOST'\'' ) ) {' wp-config.php
+  sed -i '/define( '\''DB_HOST/ a }' wp-config.php
 
   cp ${VVV_PATH_TO_SITE}/provision/index.php ${VVV_PATH_TO_SITE}/public_html/index.php
 
